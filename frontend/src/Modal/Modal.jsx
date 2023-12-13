@@ -73,27 +73,28 @@ const Modal = () => {
 
   const handleKeyUp = (event) => {
     if (event.key === "Enter") {
-      setTimeout(() => {
-        sendMessage(inputValue);
-        setInputValue("");
-      }, 1000);
+      sendMessage(inputValue);
+      setInputValue("");
     }
   };
 
   function sendMessage(message) {
     setValue(message);
     axios
-      .post("http://localhost:8080/reply", { message })
-      .then((res) => setData(res.data.msg))
+      .post("https://quest-labs.onrender.com/reply", { message })
+      .then((res) => {
+        console.log(res);
+        setData(res.data.msg);
+      })
       .catch((error) => console.log(error));
   }
-  
+
   let content;
 
   if (activeItem === 2) {
     content = (
       <div>
-        <nav id={modalStyle.helpNavbar}>
+        <nav id={activeItem === 2 && modalStyle.helpNavbar}>
           <h3>Help</h3>
           <div className={modalStyle.helpSearchDiv}>
             <p>Search for help</p>
@@ -212,7 +213,7 @@ const Modal = () => {
   } else if (activeItem === 3) {
     content = (
       <div>
-        <nav id={modalStyle.helpNavbar}>
+        <nav id={activeItem === 3 && modalStyle.newsNavbar}>
           <h3>Help</h3>
         </nav>
         <div className={modalStyle.newsFirstDiv}>
@@ -261,7 +262,13 @@ const Modal = () => {
         </div>
       </div>
     );
+  } else if (activeItem === 1) {
+    content = (
+      <h2 style={{ textAlign: "center", color: "white" }}>No Messages</h2>
+    );
   }
+
+  // console.log(data)
 
   return (
     <div id={modalStyle.main}>
@@ -358,9 +365,8 @@ const Modal = () => {
             </div>
           </div>
           <div className={modalStyle.secondChatbotDiv}>
-            {/* <div className={modalStyle.botMessageDiv}></div>
-            <div className={modalStyle.userMessageDiv}></div> */}
             {data.map((el, index) => {
+              console.log(el);
               return (
                 <div key={index}>
                   <div>
